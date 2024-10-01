@@ -45,8 +45,15 @@ jobs:
       with:
         args: 'lint transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml --skip-rule operation-4xx-response --skip-rule no-server-trailing-slash --skip-rule no-unused-components --skip-rule security-defined --skip-rule info-license-url --skip-rule info-license --skip-rule no-empty-servers --skip-rule operation-summary --skip-rule tag-description --max-problems 1000'
 
+    - name: Run diff
+      run: docker run --rm -t -v $(pwd)/:/data:ro -w /data tufin/oasdiff changelog openapi/${{ matrix.version }}/${{ matrix.settings }}.yaml transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml -f githubactions
+
+    - name: Run diff
+      run: docker run --rm -t -v $(pwd)/:/data:ro -w /data tufin/oasdiff diff openapi/${{ matrix.version }}/${{ matrix.settings }}.yaml transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml -f githubactions
+
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: ${{ matrix.version }}-${{ matrix.settings }}
         path: transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml
+
