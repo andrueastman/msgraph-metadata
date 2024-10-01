@@ -50,9 +50,17 @@ jobs:
       with:
         base: 'openapi/${{ matrix.version }}/${{ matrix.settings }}.yaml'
         revision: 'transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml'
+        format: 'text'
+        output-to-file: ${{ matrix.version }}_${{ matrix.settings }}_diff.txt
 
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: ${{ matrix.version }}-${{ matrix.settings }}
         path: transformed_${{ matrix.version }}_${{ matrix.settings }}_metadata.yml
+
+    - uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: ${{ matrix.version }}-${{ matrix.settings }}-diff
+        path: ${{ matrix.version }}_${{ matrix.settings }}_diff.txt
